@@ -287,6 +287,8 @@ public class customer extends javax.swing.JPanel {
             System.out.println(e);
             
         }
+        
+        tb_load();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -298,6 +300,8 @@ public class customer extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.out.println(e);
         }
+        
+        tb_load();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void c_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c_searchActionPerformed
@@ -333,6 +337,8 @@ public class customer extends javax.swing.JPanel {
         } catch (Exception e) {
             System.out.println(e);
         }
+        
+        tb_load();
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
