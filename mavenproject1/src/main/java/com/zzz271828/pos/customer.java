@@ -7,6 +7,8 @@ package com.zzz271828.pos;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
+import java.util.Vector;
 
 /**
  *
@@ -19,7 +21,34 @@ public class customer extends javax.swing.JPanel {
      */
     public customer() {
         initComponents();
+        tb_load();
     }
+    
+    public void tb_load() {
+        
+        try {
+            DefaultTableModel dt = (DefaultTableModel) c_table.getModel();
+            dt.setRowCount(0);
+            Statement s = db.mycon().createStatement();
+            ResultSet rs = s.executeQuery(" SELECT * FROM customers ");
+            
+            while (rs.next()) {
+                Vector v = new Vector();
+                
+                v.add(rs.getString(1));
+                v.add(rs.getString(2));
+                v.add(rs.getString(3));
+                
+                dt.addRow(v);
+                
+                
+                
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+     }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,7 +69,7 @@ public class customer extends javax.swing.JPanel {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        c_table = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         c_search = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -154,7 +183,7 @@ public class customer extends javax.swing.JPanel {
                 .addGap(38, 38, 38))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        c_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -165,7 +194,7 @@ public class customer extends javax.swing.JPanel {
                 "ID", "Customer name", "T.P number", "ToBeAdded"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(c_table);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -310,6 +339,7 @@ public class customer extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField c_name;
     private javax.swing.JTextField c_search;
+    private javax.swing.JTable c_table;
     private javax.swing.JTextField c_tp;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -322,6 +352,5 @@ public class customer extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
