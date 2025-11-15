@@ -74,6 +74,11 @@ public class customer extends javax.swing.JPanel {
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/zzz271828/pos/images/update_icon.png"))); // NOI18N
         jButton1.setText("Update");
         jButton1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/zzz271828/pos/images/check_icon.png"))); // NOI18N
@@ -278,6 +283,21 @@ public class customer extends javax.swing.JPanel {
             System.out.println(e);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // Update action
+        String name = c_name.getText();
+        String tp = c_tp.getText();
+        String id = c_search.getText();
+        
+        try {
+            Statement s = db.mycon().createStatement();
+            s.executeUpdate(" UPDATE customers SET c_name = '"+name+"', c_tp_num = '"+tp+"' WHERE c_id = '"+id+"'");
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
