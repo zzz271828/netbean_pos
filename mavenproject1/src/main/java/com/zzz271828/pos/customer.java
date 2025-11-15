@@ -195,6 +195,11 @@ public class customer extends javax.swing.JPanel {
                 "ID", "Customer name", "T.P number", "ToBeAdded"
             }
         ));
+        c_table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                c_tableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(c_table);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -285,7 +290,7 @@ public class customer extends javax.swing.JPanel {
             Statement s = db.mycon().createStatement();
             s.executeUpdate(" INSERT INTO customers (c_name, c_tp_num) VALUES ('"+name+"', '"+tp+"')");
             
-            JOptionPane.showConfirmDialog(null, "Save Data ? （∩▽∩）");
+            JOptionPane.showConfirmDialog(null, "Save Data ? (๑•̀ω•́๑)");
         } catch (Exception e) {
             System.out.println(e);
             
@@ -346,6 +351,20 @@ public class customer extends javax.swing.JPanel {
         
         tb_load();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void c_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_tableMouseClicked
+        // mouse click get data to textfield
+        
+        
+        int r = c_table.getSelectedRow();
+        String id = c_table.getValueAt(r, 0).toString();
+        String name = c_table.getValueAt(r, 1).toString();
+        String tp = c_table.getValueAt(r, 2).toString();
+        
+        c_search.setText(id);
+        c_name.setText(name);
+        c_tp.setText(tp);
+    }//GEN-LAST:event_c_tableMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
