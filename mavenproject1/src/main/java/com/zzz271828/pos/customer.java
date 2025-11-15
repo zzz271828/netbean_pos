@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.table.DefaultTableModel;
 import java.util.Vector;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -283,6 +284,8 @@ public class customer extends javax.swing.JPanel {
         try {
             Statement s = db.mycon().createStatement();
             s.executeUpdate(" INSERT INTO customers (c_name, c_tp_num) VALUES ('"+name+"', '"+tp+"')");
+            
+            JOptionPane.showConfirmDialog(null, "Save Data ? （∩▽∩）");
         } catch (Exception e) {
             System.out.println(e);
             
@@ -297,6 +300,8 @@ public class customer extends javax.swing.JPanel {
         try {
             Statement s = db.mycon().createStatement();
             s.executeUpdate("DELETE FROM customers WHERE c_id = '"+id+"'");
+            
+            JOptionPane.showConfirmDialog(null, "Delete Data ? (灬°ω°灬) ");
         } catch (SQLException e) {
             System.out.println(e);
         }
@@ -334,6 +339,7 @@ public class customer extends javax.swing.JPanel {
             Statement s = db.mycon().createStatement();
             s.executeUpdate(" UPDATE customers SET c_name = '"+name+"', c_tp_num = '"+tp+"' WHERE c_id = '"+id+"'");
             
+            JOptionPane.showConfirmDialog(null, "Updated Data ? (๑•̀ᄇ•́)و ✧");
         } catch (Exception e) {
             System.out.println(e);
         }
