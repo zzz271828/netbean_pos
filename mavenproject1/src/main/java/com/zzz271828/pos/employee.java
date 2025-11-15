@@ -28,7 +28,7 @@ public class employee extends javax.swing.JPanel {
     public void tb_load() {
         
         try {
-            DefaultTableModel dt = (DefaultTableModel) c_table.getModel();
+            DefaultTableModel dt = (DefaultTableModel) e_table.getModel();
             dt.setRowCount(0);
             Statement s = db.mycon().createStatement();
             ResultSet rs = s.executeQuery(" SELECT * FROM employee ");
@@ -70,7 +70,7 @@ public class employee extends javax.swing.JPanel {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        c_table = new javax.swing.JTable();
+        e_table = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         e_search = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -186,7 +186,7 @@ public class employee extends javax.swing.JPanel {
                 .addGap(38, 38, 38))
         );
 
-        c_table.setModel(new javax.swing.table.DefaultTableModel(
+        e_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -197,12 +197,12 @@ public class employee extends javax.swing.JPanel {
                 "ID", "Employees name", "T.P number", "ToBeAdded"
             }
         ));
-        c_table.addMouseListener(new java.awt.event.MouseAdapter() {
+        e_table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                c_tableMouseClicked(evt);
+                e_tableMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(c_table);
+        jScrollPane1.setViewportView(e_table);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -323,10 +323,16 @@ public class employee extends javax.swing.JPanel {
         String tp = e_tp.getText();
         
         try {
-            Statement s = db.mycon().createStatement();
-            s.executeUpdate(" INSERT INTO employees (e_name, e_tp_num) VALUES ('"+name+"', '"+tp+"')");
-            
-            JOptionPane.showConfirmDialog(null, "Save Data ? (๑•̀ω•́๑)");
+            int choice = JOptionPane.showConfirmDialog(this, "Save data? (๑•̀ω•́๑)", "Confirm Save", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            if (choice == JOptionPane.YES_OPTION) {
+
+                Statement s = db.mycon().createStatement();
+                s.executeUpdate("INSERT INTO employees (e_name, e_tp_num) VALUES ('"+name+"', '"+tp+"')");
+
+                JOptionPane.showMessageDialog(this, "Saved successfully (ง •̀_•́)ง");
+                tb_load();  
+            }
         } catch (Exception e) {
             System.out.println(e);
             
@@ -339,10 +345,13 @@ public class employee extends javax.swing.JPanel {
         // Delete action
         String id = e_search.getText();
         try {
-            Statement s = db.mycon().createStatement();
-            s.executeUpdate("DELETE FROM employees WHERE c_id = '"+id+"'");
-            
-            JOptionPane.showConfirmDialog(null, "Delete Data ? (灬°ω°灬) ");
+            int choice = JOptionPane.showConfirmDialog(this, "Delete Data ? (灬°ω°灬)", "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            if (choice == JOptionPane.YES_OPTION) {
+                Statement s = db.mycon().createStatement();
+                s.executeUpdate("DELETE FROM employees WHERE e_id = '" + id + "'");
+                JOptionPane.showMessageDialog(this, "Deleted successfully (ง •̀_•́)ง");
+            }
         } catch (SQLException e) {
             System.out.println(e);
         }
@@ -359,11 +368,11 @@ public class employee extends javax.swing.JPanel {
         String search = e_search.getText();
         try {
             Statement s = db.mycon().createStatement();
-            ResultSet rs = s.executeQuery(" SELECT * FROM employees WHERE c_id = '"+search+"'");
+            ResultSet rs = s.executeQuery(" SELECT * FROM employees WHERE e_id = '"+search+"'");
             
             if(rs.next()) {
-                e_name.setText(rs.getString("c_name"));
-                e_tp.setText(rs.getString("c_tp_num"));
+                e_name.setText(rs.getString("e_name"));
+                e_tp.setText(rs.getString("e_tp_num"));
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -377,10 +386,15 @@ public class employee extends javax.swing.JPanel {
         String id = e_search.getText();
         
         try {
-            Statement s = db.mycon().createStatement();
-            s.executeUpdate(" UPDATE employees SET c_name = '"+name+"', c_tp_num = '"+tp+"' WHERE c_id = '"+id+"'");
-            
-            JOptionPane.showConfirmDialog(null, "Updated Data ? (๑•̀ᄇ•́)و ✧");
+            int choice = JOptionPane.showConfirmDialog(this, "Updated Data ? (๑•̀ᄇ•́)و ✧", "Confirm Update", JOptionPane.YES_NO_OPTION);
+
+            if (choice == JOptionPane.YES_OPTION) {
+                Statement s = db.mycon().createStatement();
+                s.executeUpdate(
+                    "UPDATE employees SET e_name = '" + name + "', e_tp_num = '" + tp + "' WHERE e_id = '" + id + "'"
+                );
+                JOptionPane.showMessageDialog(this, "Updated successfully (ง •̀_•́)ง");
+            }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -388,19 +402,19 @@ public class employee extends javax.swing.JPanel {
         tb_load();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void c_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_tableMouseClicked
+    private void e_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_e_tableMouseClicked
         // mouse click get data to textfield
         
         
-        int r = c_table.getSelectedRow();
-        String id = c_table.getValueAt(r, 0).toString();
-        String name = c_table.getValueAt(r, 1).toString();
-        String tp = c_table.getValueAt(r, 2).toString();
+        int r = e_table.getSelectedRow();
+        String id = e_table.getValueAt(r, 0).toString();
+        String name = e_table.getValueAt(r, 1).toString();
+        String tp = e_table.getValueAt(r, 2).toString();
         
         e_search.setText(id);
         e_name.setText(name);
         e_tp.setText(tp);
-    }//GEN-LAST:event_c_tableMouseClicked
+    }//GEN-LAST:event_e_tableMouseClicked
 
     private void e_search_tbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_e_search_tbActionPerformed
         // TODO add your handling code here:
@@ -416,12 +430,12 @@ public class employee extends javax.swing.JPanel {
         String name = e_search_tb.getText();
         try {
             
-            DefaultTableModel dt = (DefaultTableModel) c_table.getModel();
+            DefaultTableModel dt = (DefaultTableModel) e_table.getModel();
             
             dt.setRowCount(0);
             Statement s = db.mycon().createStatement();
             
-            ResultSet rs = s.executeQuery(" SELECT * FROM employees  WHERE c_name LIKE '%"+name+"%'");
+            ResultSet rs = s.executeQuery(" SELECT * FROM employees  WHERE e_name LIKE '%"+name+"%'");
             
             while (rs.next()) {
                 Vector v = new Vector();
@@ -442,10 +456,10 @@ public class employee extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable c_table;
     private javax.swing.JTextField e_name;
     private javax.swing.JTextField e_search;
     private javax.swing.JTextField e_search_tb;
+    private javax.swing.JTable e_table;
     private javax.swing.JTextField e_tp;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

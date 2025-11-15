@@ -323,10 +323,15 @@ public class supplier extends javax.swing.JPanel {
         String tp = s_tp.getText();
         
         try {
-            Statement s = db.mycon().createStatement();
-            s.executeUpdate(" INSERT INTO suppliers (s_name, s_tp_num) VALUES ('"+name+"', '"+tp+"')");
-            
-            JOptionPane.showConfirmDialog(null, "Save Data ? (๑•̀ω•́๑)");
+            int choice = JOptionPane.showConfirmDialog(this, "Save data? (๑•̀ω•́๑)", "Confirm Save", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (choice == JOptionPane.YES_OPTION) {
+
+                Statement s = db.mycon().createStatement();
+                s.executeUpdate("INSERT INTO suppliers (s_name, s_tp_num) VALUES ('"+name+"', '"+tp+"')");
+
+                JOptionPane.showMessageDialog(this, "Saved successfully (ง •̀_•́)ง");
+                tb_load();  
+            }
         } catch (Exception e) {
             System.out.println(e);
             
@@ -339,10 +344,13 @@ public class supplier extends javax.swing.JPanel {
         // Delete action
         String id = s_search.getText();
         try {
-            Statement s = db.mycon().createStatement();
-            s.executeUpdate("DELETE FROM suppliers WHERE s_id = '"+id+"'");
-            
-            JOptionPane.showConfirmDialog(null, "Delete Data ? (灬°ω°灬) ");
+            int choice = JOptionPane.showConfirmDialog(this, "Delete Data ? (灬°ω°灬)", "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            if (choice == JOptionPane.YES_OPTION) {
+                Statement s = db.mycon().createStatement();
+                s.executeUpdate("DELETE FROM employees WHERE s_id = '" + id + "'");
+                JOptionPane.showMessageDialog(this, "Deleted successfully (ง •̀_•́)ง");
+            }
         } catch (SQLException e) {
             System.out.println(e);
         }
@@ -377,10 +385,15 @@ public class supplier extends javax.swing.JPanel {
         String id = s_search.getText();
         
         try {
-            Statement s = db.mycon().createStatement();
-            s.executeUpdate(" UPDATE suppliers SET s_name = '"+name+"', s_tp_num = '"+tp+"' WHERE s_id = '"+id+"'");
-            
-            JOptionPane.showConfirmDialog(null, "Updated Data ? (๑•̀ᄇ•́)و ✧");
+            int choice = JOptionPane.showConfirmDialog(this, "Updated Data ? (๑•̀ᄇ•́)و ✧", "Confirm Update", JOptionPane.YES_NO_OPTION);
+
+            if (choice == JOptionPane.YES_OPTION) {
+                Statement s = db.mycon().createStatement();
+                s.executeUpdate(
+                    "UPDATE suppliers SET s_name = '" + name + "', s_tp_num = '" + tp + "' WHERE s_id = '" + id + "'"
+                );
+                JOptionPane.showMessageDialog(this, "Updated successfully (ง •̀_•́)ง");
+            }
         } catch (Exception e) {
             System.out.println(e);
         }
