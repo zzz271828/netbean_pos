@@ -261,7 +261,14 @@ public class customer extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        // Delete action
+        String id = c_search.getText();
+        try {
+            Statement s = db.mycon().createStatement();
+            s.executeUpdate("DELETE FROM customers WHERE c_id = '"+id+"'");
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void c_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c_searchActionPerformed
