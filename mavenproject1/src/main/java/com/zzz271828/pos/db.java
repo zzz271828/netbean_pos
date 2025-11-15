@@ -4,13 +4,25 @@
  */
 package com.zzz271828.pos;
 
+import java.sql.*;
+
+
 /**
  *
  * @author yh-pc
  */
 public class db {
     public static Connection mycon() {
+        Connection con  = null;
         
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pos", "root", "");
+            return con;
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println(e);
+            return null;
+        }
     }
     
 }

@@ -254,7 +254,7 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_jToggleButton7ActionPerformed
 
     private void jToggleButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton8ActionPerformed
-, 
+ 
     }//GEN-LAST:event_jToggleButton8ActionPerformed
 
     /**
