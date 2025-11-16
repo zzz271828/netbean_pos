@@ -322,7 +322,7 @@ public class product extends javax.swing.JPanel {
         jLabel8.setText("Search name:");
 
         p_search_tb.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        p_search_tb.setText("input name...");
+        p_search_tb.setText("input bar code...");
         p_search_tb.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 p_search_tbMouseReleased(evt);
@@ -458,7 +458,7 @@ public class product extends javax.swing.JPanel {
     private void p_search_tbKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_p_search_tbKeyReleased
         // the search action from keys
 
-        String name = p_search_tb.getText();
+        String bcode = p_search_tb.getText();
         try {
 
             DefaultTableModel dt = (DefaultTableModel) p_table.getModel();
@@ -466,7 +466,7 @@ public class product extends javax.swing.JPanel {
             dt.setRowCount(0);
             Statement s = db.mycon().createStatement();
 
-            ResultSet rs = s.executeQuery(" SELECT * FROM products  WHERE p_name LIKE '%"+name+"%'");
+            ResultSet rs = s.executeQuery(" SELECT * FROM products  WHERE p_bcode LIKE '%"+bcode+"%'");
 
             while (rs.next()) {
                 Vector v = new Vector();
