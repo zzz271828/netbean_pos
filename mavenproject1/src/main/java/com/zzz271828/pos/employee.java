@@ -31,7 +31,7 @@ public class employee extends javax.swing.JPanel {
             DefaultTableModel dt = (DefaultTableModel) e_table.getModel();
             dt.setRowCount(0);
             Statement s = db.mycon().createStatement();
-            ResultSet rs = s.executeQuery(" SELECT * FROM employee ");
+            ResultSet rs = s.executeQuery(" SELECT * FROM employees ");
             
             while (rs.next()) {
                 Vector v = new Vector();
