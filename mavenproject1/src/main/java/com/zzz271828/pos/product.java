@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 public class product extends javax.swing.JPanel {
 
     /**
-     * Creates new form Customers
+     * Creates new form Products
      */
     public product() {
         initComponents();
@@ -49,6 +49,7 @@ public class product extends javax.swing.JPanel {
             }
             
         } catch (Exception e) {
+            System.out.println("tb_load() col num");
             System.out.println(e);
         }
      }
@@ -384,7 +385,7 @@ public class product extends javax.swing.JPanel {
             
             if (choice == JOptionPane.YES_OPTION) {
                 Statement s = db.mycon().createStatement();
-                s.executeUpdate("INSERT INTO products (p_name, p_bcode, p_bcode, p_price, p_qty, p_sid) VALUES ('"+name+"', '"+bCode+"', '"+price+"', '"+qty+"', '"+sid+"')");
+                s.executeUpdate("INSERT INTO products (p_name, p_bcode, p_price, p_qty, p_sid) VALUES ('"+name+"', '"+bCode+"', '"+price+"', '"+qty+"', '"+sid+"')");
                 
                 JOptionPane.showMessageDialog(this, "Saved successfully (ง •̀_•́)ง");
                 tb_load(); 
@@ -435,7 +436,7 @@ public class product extends javax.swing.JPanel {
             dt.setRowCount(0);
             Statement s = db.mycon().createStatement();
 
-            ResultSet rs = s.executeQuery(" SELECT * FROM customers  WHERE c_name LIKE '%"+name+"%'");
+            ResultSet rs = s.executeQuery(" SELECT * FROM products  WHERE c_name LIKE '%"+name+"%'");
 
             while (rs.next()) {
                 Vector v = new Vector();
