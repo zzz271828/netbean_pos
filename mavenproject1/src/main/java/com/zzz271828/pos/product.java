@@ -7,6 +7,7 @@ package com.zzz271828.pos;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 
@@ -115,6 +116,11 @@ public class product extends javax.swing.JPanel {
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/zzz271828/pos/images/update_icon.png"))); // NOI18N
         jButton1.setText("Update");
         jButton1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/zzz271828/pos/images/check_icon.png"))); // NOI18N
@@ -130,6 +136,11 @@ public class product extends javax.swing.JPanel {
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/zzz271828/pos/images/search_icon.png"))); // NOI18N
         jButton3.setText("Search");
         jButton3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/zzz271828/pos/images/delete_icon.png"))); // NOI18N
@@ -256,6 +267,11 @@ public class product extends javax.swing.JPanel {
                 "ID", "Product name", "Bar code", "Price", "Qty", "SID"
             }
         ));
+        p_table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                p_tableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(p_table);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -398,7 +414,21 @@ public class product extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        // Delete action
+        String id = p_search.getText();
+        try {
+            int choice = JOptionPane.showConfirmDialog(this, "Delete Data ? (灬°ω°灬)", "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            if (choice == JOptionPane.YES_OPTION) {
+                Statement s = db.mycon().createStatement();
+                s.executeUpdate("DELETE FROM products WHERE p_id = '" + id + "'");
+                JOptionPane.showMessageDialog(this, "Deleted successfully (ง •̀_•́)ง");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        tb_load();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void p_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_p_searchActionPerformed
@@ -436,7 +466,7 @@ public class product extends javax.swing.JPanel {
             dt.setRowCount(0);
             Statement s = db.mycon().createStatement();
 
-            ResultSet rs = s.executeQuery(" SELECT * FROM products  WHERE c_name LIKE '%"+name+"%'");
+            ResultSet rs = s.executeQuery(" SELECT * FROM products  WHERE p_name LIKE '%"+name+"%'");
 
             while (rs.next()) {
                 Vector v = new Vector();
@@ -444,6 +474,9 @@ public class product extends javax.swing.JPanel {
                 v.add(rs.getString(1));
                 v.add(rs.getString(2));
                 v.add(rs.getString(3));
+                v.add(rs.getString(4));
+                v.add(rs.getString(5));
+                v.add(rs.getString(6));
 
                 dt.addRow(v);
             }
@@ -453,6 +486,72 @@ public class product extends javax.swing.JPanel {
 
         }
     }//GEN-LAST:event_p_search_tbKeyReleased
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // Search action
+        String search = p_search.getText();
+        
+        try {
+            Statement s = db.mycon().createStatement();
+            ResultSet rs = s.executeQuery(" SELECT * FROM products WHERE p_id = '"+search+"'");
+            
+            if(rs.next()) {
+                p_name.setText(rs.getString("p_name"));
+                p_bcode.setText(rs.getString("p_bcode"));
+                p_price.setText(rs.getString("p_price"));
+                p_qty.setText(rs.getString("p_qty"));
+                p_sid.setText(rs.getString("p_sid"));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // Update action:
+        String id = p_search.getText();
+        String name = p_name.getText();
+        String bcode = p_bcode.getText();
+        String price = p_price.getText();
+        String qty = p_qty.getText();
+        String sid = p_sid.getText();
+        
+        try {
+            int choice = JOptionPane.showConfirmDialog(this, "Updated Data ? (๑•̀ᄇ•́)و ✧", "Confirm Update", JOptionPane.YES_NO_OPTION);
+
+            if (choice == JOptionPane.YES_OPTION) {
+                Statement s = db.mycon().createStatement();
+                s.executeUpdate(
+                    "UPDATE employees SET p_name = '"+name+"', p_bcode = '"+bcode+"', p_price = '"+price+"', p_qty = '"+qty+"', p_sid = '"+sid+"' WHERE e_id = '" + id + "'"
+                );
+                JOptionPane.showMessageDialog(this, "Updated successfully (ง •̀_•́)ง");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        tb_load();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void p_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_p_tableMouseClicked
+        // mouse click get data to textfield
+        
+        int r = p_table.getSelectedRow();
+        String id = p_table.getValueAt(r, 0).toString();
+        String name = p_table.getValueAt(r, 1).toString();
+        String bcode = p_table.getValueAt(r, 2).toString();
+        String price = p_table.getValueAt(r, 3).toString();
+        String qty = p_table.getValueAt(r, 4).toString();
+        String sid = p_table.getValueAt(r, 5).toString();
+        
+        p_search.setText(id);
+        p_name.setText(name);
+        p_bcode.setText(bcode);
+        p_price.setText(price);
+        p_qty.setText(qty);
+        p_sid.setText(sid);
+    }//GEN-LAST:event_p_tableMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
