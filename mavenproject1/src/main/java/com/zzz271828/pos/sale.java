@@ -341,6 +341,8 @@ public class sale extends javax.swing.JPanel {
 
         bill_total.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         bill_total.setText("00");
+        bill_total.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        bill_total.setEnabled(false);
         bill_total.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bill_totalActionPerformed(evt);
@@ -352,6 +354,8 @@ public class sale extends javax.swing.JPanel {
 
         balance.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         balance.setText("00");
+        balance.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        balance.setEnabled(false);
         balance.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 balanceActionPerformed(evt);
@@ -503,22 +507,58 @@ public class sale extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_balanceActionPerformed
 
+    private int findProductInCart(String name, String barcode, String price) {
+    DefaultTableModel dt = (DefaultTableModel) sale_prod_tb.getModel();
+
+    for (int i = 0; i < dt.getRowCount(); i++) {
+        String cartName = dt.getValueAt(i, 1).toString();
+        String cartBarcode = dt.getValueAt(i, 2).toString();
+        String cartPrice = dt.getValueAt(i, 4).toString();
+
+        if (cartName.equals(name) && cartBarcode.equals(barcode) && cartPrice.equals(price)) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // add to cart operation details
         
         DefaultTableModel dt = (DefaultTableModel) sale_prod_tb.getModel();
-        Vector v = new Vector();
+
+        String name = com_pro.getSelectedItem().toString();
+        String barcode = bar_code.getText();
+        String price = unit_price.getText();
+        String qtyText = qty.getText();
+        String totalText = total_price.getText();
         
-        v.add(inid.getText());
-        v.add(com_pro.getSelectedItem().toString());
-        v.add(bar_code.getText());
-        v.add(qty.getText());
-        v.add(unit_price.getText());
-        v.add(total_price.getText());
-        
-        dt.addRow(v);
-        
+        int row = findProductInCart(name, barcode, price);
+
+        if (row != -1) {
+            int oldQty = Integer.parseInt(dt.getValueAt(row, 3).toString());
+            int newQty = oldQty + Integer.parseInt(qtyText);
+
+            dt.setValueAt(newQty, row, 3);
+            double up = Double.parseDouble(price);
+            double newTotal = newQty * up;
+
+            dt.setValueAt(String.valueOf(newTotal), row, 5);
+        } else {
+            Vector v = new Vector();
+            v.add(inid.getText());
+            v.add(name);
+            v.add(barcode);
+            v.add(qtyText);
+            v.add(price);
+            v.add(totalText);
+
+            dt.addRow(v);
+        }
+
         calc_cart_total();
+        paid_due_calc();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -535,6 +575,8 @@ public class sale extends javax.swing.JPanel {
         
         calc_cart_total();
         
+        paid_due_calc();
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -549,6 +591,8 @@ public class sale extends javax.swing.JPanel {
         }
         
         calc_cart_total();
+        
+        paid_due_calc();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     
@@ -594,7 +638,7 @@ public class sale extends javax.swing.JPanel {
         prod_tot_cal();
     }//GEN-LAST:event_qtyKeyReleased
 
-    private void paid_amountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_paid_amountKeyReleased
+    public void paid_due_calc() {
         // when typed in the paid amount
         Double paid = Double.valueOf(paid_amount.getText().toString());
         Double tot = Double.valueOf(bill_total.getText().toString());
@@ -603,6 +647,10 @@ public class sale extends javax.swing.JPanel {
         balance_due = tot - paid;
         
         balance.setText(String.valueOf(balance_due));
+    }
+    private void paid_amountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_paid_amountKeyReleased
+        // when typed in the paid amount
+        paid_due_calc();
         
     }//GEN-LAST:event_paid_amountKeyReleased
 
