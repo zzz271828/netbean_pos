@@ -4,6 +4,10 @@
  */
 package com.zzz271828.pos;
 
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.util.Vector;
+import javax.swing.DefaultComboBoxModel;
 /**
  *
  * @author yh-pc
@@ -15,8 +19,28 @@ public class sale extends javax.swing.JPanel {
      */
     public sale() {
         initComponents();
+        data_load();
     }
     
+    public void data_load () {
+        try {
+            Statement s = db.mycon().createStatement();
+            
+            ResultSet rs = s.executeQuery("SELECT * FROM customers");
+            Vector v = new Vector();
+            
+            while (rs.next()) {
+                v.add(rs.getString("c_name"));
+                
+                
+                DefaultComboBoxModel com = new DefaultComboBoxModel(v);
+                com_cus.setModel(com);
+                
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
     
 
     /**
