@@ -23,6 +23,7 @@ public class sale extends javax.swing.JPanel {
     }
     
     public void data_load () {
+        // load customer
         try {
             Statement s = db.mycon().createStatement();
             
@@ -35,6 +36,25 @@ public class sale extends javax.swing.JPanel {
                 
                 DefaultComboBoxModel com = new DefaultComboBoxModel(v);
                 com_cus.setModel(com);
+                
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        // load products
+        try {
+            Statement s = db.mycon().createStatement();
+            
+            ResultSet rs = s.executeQuery("SELECT * FROM products");
+            Vector v = new Vector();
+            
+            while (rs.next()) {
+                v.add(rs.getString("p_name"));
+                
+                
+                DefaultComboBoxModel com = new DefaultComboBoxModel(v);
+                com_pro.setModel(com);
                 
             }
         } catch (Exception e) {
@@ -63,10 +83,10 @@ public class sale extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         com_cus = new javax.swing.JComboBox<>();
         com_pro = new javax.swing.JComboBox<>();
+        unit_price = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -161,14 +181,6 @@ public class sale extends javax.swing.JPanel {
         jLabel4.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jLabel4.setText("Qty : ");
 
-        jTextField5.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        jTextField5.setText("00");
-        jTextField5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
-            }
-        });
-
         jLabel5.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jLabel5.setText("Unit Price : ");
 
@@ -177,6 +189,14 @@ public class sale extends javax.swing.JPanel {
 
         com_pro.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         com_pro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "select" }));
+        com_pro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                com_proActionPerformed(evt);
+            }
+        });
+
+        unit_price.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        unit_price.setText("00.00");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -197,9 +217,9 @@ public class sale extends javax.swing.JPanel {
                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(177, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(unit_price)
+                .addContainerGap(303, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,7 +228,7 @@ public class sale extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel5)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(unit_price))
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
                         .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -409,10 +429,6 @@ public class sale extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField4ActionPerformed
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
-
     private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField6ActionPerformed
@@ -436,6 +452,24 @@ public class sale extends javax.swing.JPanel {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void com_proActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_com_proActionPerformed
+        // selec product action
+        
+        String name = com_pro.getSelectedItem().toString();
+        try {
+            Statement s = db.mycon().createStatement();
+            
+            ResultSet rs = s.executeQuery("SELECT p_price FROM products WHERE p_name = '"+name+"'");
+            
+            if (rs.next()) {
+                unit_price.setText(rs.getString("p_price"));
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_com_proActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -462,9 +496,9 @@ public class sale extends javax.swing.JPanel {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
+    private javax.swing.JLabel unit_price;
     // End of variables declaration//GEN-END:variables
 }
