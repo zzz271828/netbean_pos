@@ -838,14 +838,15 @@ public class sale extends javax.swing.JPanel {
             DefaultTableModel dt = (DefaultTableModel) sale_prod_tb.getModel();
             
             int rw = sale_prod_tb.getSelectedRow();
+            int qtyValue = Integer.parseInt(dt.getValueAt(rw, 3).toString());
             dt.removeRow(rw);
             
             
             int old_total_qty = Integer.parseInt(qty_total.getText());
             
-            int qtyValue = Integer.parseInt(dt.getValueAt(rw, 3).toString());
+            
 
-            int new_total_qty = old_total_qty + qtyValue;
+            int new_total_qty = old_total_qty - qtyValue;
 
             qty_total.setText(String.valueOf(new_total_qty));
         } catch (Exception e) {
