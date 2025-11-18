@@ -20,6 +20,7 @@ public class sale extends javax.swing.JPanel {
     
     public static String barcode_c;
     private boolean DELETE;
+    public static String cus_id = "0";
 
     /**
      * Creates new form sale
@@ -461,6 +462,7 @@ public class sale extends javax.swing.JPanel {
         jLabel6.setText("Paid Amount : ");
 
         jButton5.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/zzz271828/pos/images/pay_in_full_icon.png"))); // NOI18N
         jButton5.setText("Pay In Full");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -816,6 +818,14 @@ public class sale extends javax.swing.JPanel {
 
             dt.addRow(v);
         }
+        
+        int old_total_qty = Integer.parseInt(qty_total.getText());
+        int qtyValue = Integer.parseInt(qtyText);
+
+        int new_total_qty = old_total_qty + qtyValue;
+
+        qty_total.setText(String.valueOf(new_total_qty));
+
 
         calc_cart_total();
         paid_due_calc();
@@ -829,10 +839,19 @@ public class sale extends javax.swing.JPanel {
             
             int rw = sale_prod_tb.getSelectedRow();
             dt.removeRow(rw);
+            
+            
+            int old_total_qty = Integer.parseInt(qty_total.getText());
+            
+            int qtyValue = Integer.parseInt(dt.getValueAt(rw, 3).toString());
+
+            int new_total_qty = old_total_qty + qtyValue;
+
+            qty_total.setText(String.valueOf(new_total_qty));
         } catch (Exception e) {
             System.out.println(e);
         }
-        
+                
         calc_cart_total();
         
         paid_due_calc();
@@ -853,6 +872,8 @@ public class sale extends javax.swing.JPanel {
         calc_cart_total();
         
         paid_due_calc();
+        
+        qty_total.setText(String.valueOf("00"));
     }//GEN-LAST:event_jButton3ActionPerformed
 
     
@@ -1101,12 +1122,12 @@ public class sale extends javax.swing.JPanel {
         try {
             
             String cname = com_cus.getSelectedItem().toString();
-            String cid = 
+            String totqty = qty_total.getText();
                                 
             Statement ss = db.mycon().createStatement();
 
             //'"++"' `saleid`, `INID`, `Cid`, `Customer`, `total_qty`, `total_bill`, `status`, `balance`
-            ss.executeUpdate(" INSERT INTO sales (saleid, INID, Cid, Customer, total_qty, total_bill, status, balance) VALUES ('"+inid+"', '"+p_name+"', '"+p_bcode+"', '"+qyt+"', '"+unit_price+"', '"+tot_price+"')");
+            // ss.executeUpdate(" INSERT INTO sales (saleid, INID, Cid, Customer, total_qty, total_bill, status, balance) VALUES ('"+inid+"', '"+cname+"', '"+p_bcode+"', '"+qyt+"', '"+unit_price+"', '"+tot_price+"')");
             
         } catch (Exception e) {
             System.out.println(e);
@@ -1123,11 +1144,9 @@ public class sale extends javax.swing.JPanel {
             ResultSet rs = s.executeQuery("SELECT c_id, c_name FROM customers WHERE c_name = '"+name+"'");
             
             if (rs.next()) {
-                String cid = 
-                unit_price.setText(rs.getString("p_price"));
-                bar_code.setText(rs.getString("p_bcode"));
+                cus_id = rs.getString("c_id");
             }
-            
+            //the programmer is nice. 
             prod_tot_cal();
             
         } catch (Exception e) {

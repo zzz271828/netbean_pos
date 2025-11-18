@@ -655,6 +655,9 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Helvetica Neue" size="18" style="1"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/com/zzz271828/pos/images/pay_in_full_icon.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Pay In Full"/>
           </Properties>
           <Events>
