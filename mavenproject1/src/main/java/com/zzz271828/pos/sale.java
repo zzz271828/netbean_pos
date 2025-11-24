@@ -11,6 +11,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
 import javax.swing.JOptionPane;
+import java.sql.SQLException;
 
 /**
  *
@@ -209,7 +210,7 @@ public class sale extends javax.swing.JPanel {
         jLabel3.setText("Product ：");
 
         qty.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        qty.setText("00");
+        qty.setText("1");
         qty.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 qtyActionPerformed(evt);
@@ -295,10 +296,9 @@ public class sale extends javax.swing.JPanel {
                 .addGap(31, 31, 31)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(total_price, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10)
-                            .addComponent(bar_code)))
+                        .addComponent(jLabel10)
+                        .addComponent(bar_code))
+                    .addComponent(total_price, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel5)
                         .addComponent(unit_price)
@@ -825,6 +825,7 @@ public class sale extends javax.swing.JPanel {
         int new_total_qty = old_total_qty + qtyValue;
 
         qty_total.setText(String.valueOf(new_total_qty));
+        qty.setText("1");
 
 
         calc_cart_total();
@@ -1099,12 +1100,12 @@ public class sale extends javax.swing.JPanel {
                 int rc = dt.getRowCount();
 
                 for (int i = 0; i < rc; i++) {
-                    String inid = dt.getValueAt(rc, 0).toString();
-                    String p_name = dt.getValueAt(rc, 1).toString();
-                    String p_bcode = dt.getValueAt(rc, 2).toString();
-                    String qyt = dt.getValueAt(rc, 3).toString();
-                    String unit_price = dt.getValueAt(rc, 4).toString();
-                    String tot_price = dt.getValueAt(rc, 5).toString();
+                    String inid = dt.getValueAt(i, 0).toString();
+                    String p_name = dt.getValueAt(i, 1).toString();
+                    String p_bcode = dt.getValueAt(i, 2).toString();
+                    String qyt = dt.getValueAt(i, 3).toString();
+                    String unit_price = dt.getValueAt(i, 4).toString();
+                    String tot_price = dt.getValueAt(i, 5).toString();
 
                     Statement s = db.mycon().createStatement();
 
@@ -1122,15 +1123,32 @@ public class sale extends javax.swing.JPanel {
         
         try {
             
+            String inv_id = inid.getText();
+            
             String cname = com_cus.getSelectedItem().toString();
             String totqty = qty_total.getText();
-                                
+            String totbill = bill_total.getText();
+            
+            String blnc = balance.getText();
+            
+            // paid check
+            Double tot = Double.valueOf(bill_total.getText());
+            Double pid = Double.valueOf(paid_amount.getText());
+            String Status = null;
+            if(pid.equals(0.0)) {
+                Status = "Unpaid";
+            } else if(tot > pid) {
+                Status = "Partial";
+            } else {
+                Status = "Paid";
+            }
+            
             Statement ss = db.mycon().createStatement();
 
             //'"++"' `saleid`, `INID`, `Cid`, `Customer`, `total_qty`, `total_bill`, `status`, `balance`
-            // ss.executeUpdate(" INSERT INTO sales (saleid, INID, Cid, Customer, total_qty, total_bill, status, balance) VALUES ('"+inid+"', '"+cname+"', '"+p_bcode+"', '"+qyt+"', '"+unit_price+"', '"+tot_price+"')");
+            ss.executeUpdate(" INSERT INTO sales (INID, Cid, Customer, total_qty, total_bill, status, balance) VALUES ('"+inv_id+"', '"+cus_id+"', '"+cname+"', '"+totqty+"', '"+totbill+"', '"+Status+"', '"+blnc+"')");
             
-        } catch (Exception e) {
+        } catch (NumberFormatException | SQLException e) {
             System.out.println(e);
         }
     }//GEN-LAST:event_jButton4ActionPerformed
