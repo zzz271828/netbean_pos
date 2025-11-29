@@ -70,6 +70,24 @@ public class sale extends javax.swing.JPanel {
         } catch (Exception e) {
             System.out.println(e);
         }
+        
+        
+        //load the invoice number
+        try {
+            Statement s = db.mycon().createStatement();
+            ResultSet rs = s.executeQuery("SELECT * FROM extra WHERE exid = 1");
+            
+            if (rs.next()) {
+                inid.setText(rs.getString("val"));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        // plus the new invoice
+        int i = Integer.valueOf(inid.getText());
+        i++;
+        inid.setText(String.valueOf(i));
     }
     
 
@@ -140,7 +158,7 @@ public class sale extends javax.swing.JPanel {
         jButton17 = new javax.swing.JButton();
         jButton19 = new javax.swing.JButton();
         delete_btn = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        payprint = new javax.swing.JButton();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -697,12 +715,12 @@ public class sale extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton4.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
-        jButton4.setText("Pay & Print");
-        jButton4.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        payprint.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        payprint.setText("Pay & Print");
+        payprint.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        payprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                payprintActionPerformed(evt);
             }
         });
 
@@ -723,7 +741,7 @@ public class sale extends javax.swing.JPanel {
                                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(payprint, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(86, 86, 86)))
                         .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -742,7 +760,7 @@ public class sale extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(payprint, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -860,9 +878,7 @@ public class sale extends javax.swing.JPanel {
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // remova all btn action, rm everything from the cart
-        
+    private void removeallBtnHelper() {
         try {
             DefaultTableModel dt = (DefaultTableModel) sale_prod_tb.getModel();
             
@@ -876,6 +892,11 @@ public class sale extends javax.swing.JPanel {
         paid_due_calc();
         
         qty_total.setText(String.valueOf("00"));
+    }
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // remova all btn action, rm everything from the cart
+        
+        removeallBtnHelper();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     
@@ -1089,7 +1110,7 @@ public class sale extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton19ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void payprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payprintActionPerformed
         // pay & print button
         // `cartid`, `INID`, `product_name`, `bar_code`, `qty`, `unit_price`, `total_price`
         
@@ -1151,7 +1172,18 @@ public class sale extends javax.swing.JPanel {
         } catch (NumberFormatException | SQLException e) {
             System.out.println(e);
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
+        
+        try {
+            String id = inid.getText();
+            
+            Statement s = db.mycon().createStatement();
+            s.executeUpdate("UPDATE INTO extra SET val = '"+id+"' WHERE exid = 1");
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        
+    }//GEN-LAST:event_payprintActionPerformed
 
     private void com_cusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_com_cusActionPerformed
         // select customer, get cid
@@ -1171,6 +1203,8 @@ public class sale extends javax.swing.JPanel {
         } catch (Exception e) {
             System.out.println(e);
         }
+        
+        removeallBtnHelper();
         
     }//GEN-LAST:event_com_cusActionPerformed
 
@@ -1198,7 +1232,6 @@ public class sale extends javax.swing.JPanel {
     private javax.swing.JButton jButton19;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
@@ -1224,6 +1257,7 @@ public class sale extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField paid_amount;
+    private javax.swing.JButton payprint;
     private javax.swing.JTextField qty;
     private javax.swing.JTextField qty_total;
     private javax.swing.JTable sale_prod_tb;
