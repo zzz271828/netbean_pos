@@ -88,6 +88,9 @@ public class sale extends javax.swing.JPanel {
         int i = Integer.valueOf(inid.getText());
         i++;
         inid.setText(String.valueOf(i));
+        
+        
+        
     }
     
 
@@ -1177,12 +1180,12 @@ public class sale extends javax.swing.JPanel {
             String id = inid.getText();
             
             Statement s = db.mycon().createStatement();
-            s.executeUpdate("UPDATE INTO extra SET val = '"+id+"' WHERE exid = 1");
+            s.executeUpdate("UPDATE extra SET val = '"+id+"' WHERE exid = 1");
         } catch (SQLException e) {
             System.out.println(e);
         }
         
-        
+        removeallBtnHelper();
     }//GEN-LAST:event_payprintActionPerformed
 
     private void com_cusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_com_cusActionPerformed
